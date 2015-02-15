@@ -34,6 +34,8 @@ Create a histogram of total number of steps taken each day (ignoring missing val
 ```{r}
 x <-c(totals$data)
 histogram <- hist(x)
+png(filename = "histogram.png",
+    width = 480, height = 480)
 ```
 
 Calculate and report the mean and median of total number of steps taken per day.
@@ -81,7 +83,8 @@ Create a histogram now with total nmber of steps taken each day.
 ```{r}
 y <- c(totals$"data$steps")
 histogram2 <- hist(y)
-histogram2
+png(filename = "histogram2.png",
+    width = 480, height = 480)
 ```
 
 Calculate and report mean and median total number of steps taken per day.
@@ -107,3 +110,8 @@ head(df)
 ```
 
 Make a panel plot containing a time series plot (type = "1") of 5 minute interval (x axis) and average number of steps taken, averaged across all weekdays days OR weekend days (y axis). 
+
+```{r}
+
+```
+
