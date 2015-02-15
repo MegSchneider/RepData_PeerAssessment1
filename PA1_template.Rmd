@@ -28,7 +28,7 @@ Create a variable to include multiple observations in a day into a single day fo
 totals <- aggregate(data$steps ~ date, data = data, sum)
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 totals
 ```
 
@@ -38,7 +38,7 @@ Create a histogram of total number of steps taken each day (ignoring missing val
 x <-c(totals$data)
 histogram <- hist(x)
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 histogram
 png(filename = "histogram.png",
     width = 480, height = 480)
@@ -50,14 +50,14 @@ Calculate and report the mean and median of total number of steps taken per day.
 mean <-mean(x, na.rm = TRUE)
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 mean
 ```
 ```{r}
 median <-median (x, na.rm= TRUE)
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 median
 ```
 
@@ -81,7 +81,7 @@ Calculate and report the number of missing values. (Total number of rows with NA
 sum <- sum(is.na(data))
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 sum
 ```
 
@@ -93,7 +93,7 @@ library("Hmisc")}
 data[['steps']] <- impute(data[['steps']], fun = mean(steps, na.rm = TRUE))
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 head(data)
 ```
 
@@ -103,7 +103,7 @@ Create a histogram now with total nmber of steps taken each day.
 y <- c(totals$"data$steps")
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 histogram2 <- hist(y)
 png(filename = "histogram2.png",
     width = 480, height = 480)
@@ -115,7 +115,7 @@ Calculate and report mean and median total number of steps taken per day.
 mean <-mean(y)
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 mean
 ```
 
@@ -123,7 +123,7 @@ mean
 median <-median(y)
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 median
 ```
 
@@ -139,7 +139,7 @@ df = data.frame(Date1)
 df$day <- weekdays(as.Date(df$Date1))
 ```
 
-```{r, echo=FALSE}
+```{r, results='asis', echo=FALSE}
 head(df)
 ```
 
