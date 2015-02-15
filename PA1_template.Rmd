@@ -9,7 +9,10 @@ output: html_document
 First, load the data.
 
 ```{r}
-data <- read.csv("activity.csv", header = TRUE, sep=",")
+temp <- tempfile()
+download.file("http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip",temp)
+data <- read.csv(unz(temp,"activity.csv"), header = TRUE, sep=",")
+unlink(temp)
 ```
 
 Process the data time strings into POSIX.
@@ -17,74 +20,90 @@ Process the data time strings into POSIX.
 date <- strptime(data$date, format="%Y-%m-%d")
 ```
 
-Create a variable to include multiple observations in a day into a single day for data processing.
+## What is mean total number of steps taken per day?
+
+Create a variable to include multiple observations in a day into a single day for data processing. Print to show total number of steps taken per day.
 
 ```{r}
-simplifieddate <- vapply(date, FUN, simplify = TRUE, USE.NAMES = TRUE)
+totals <- aggregate(data$steps ~ date, data = data, sum)
+totals
 ```
-
-## What is mean total number of steps taken per day?
 
 Create a histogram of total number of steps taken each day (ignoring missing values).
 
 ```{r}
-histogram <- hist(data$steps)
+x <-c(totals$data)
+histogram <- hist(x)
 ```
 
 Calculate and report the mean and median of total number of steps taken per day.
 
 ```{r}
-bad <-x[!is.na(x)]
+mean <-mean(x, na.rm = TRUE)
+mean
+median <-median (x, na.rm= TRUE)
+median
 ```
 
 ## What is the average daily activity pattern?
 
-Create a time series plot (type = "1") of the 5 minute interval (x axis) and the average number of steps taken, averaged across all days on the y axis.
+Convert time intervals to time of day.
 
 ```{r}
-bad <-x[!is.na(x)]
+interval <- c(data$interval)
+timeofday <- strptime(interval, "%H%M")
+steps <- c(data$steps)
 ```
+
+Create a time series plot (type = "1") of the 5 minute interval (x axis) and the average number of steps taken, averaged across all days on the y axis.
+
+## Imputing missing values
 
 Calculate and report the number of missing values. (Total number of rows with NA)
 
 ```{r}
-bad <-x[!is.na(x)]
+sum <- sum(is.na(data))
+sum
 ```
 
-## Imputing missing values
+Fill in missing values of the dataset with the mean of the step column.
 
-Use the BLANK strategy for filling in missing values of the dataset. (Mean/median of day, or mean for 5 minute interval)
+```{r} 
+if (!require("Hmisc")) {install.packages("Hmisc") 
+library("Hmisc")}   
+data[['steps']] <- impute(data[['steps']], fun = mean(steps, na.rm = TRUE))
+head(data)
 
-```{r}
-bad <-x[!is.na(x)]
-```
-
-Create a new dataset equal to original datset with missing data filled in.
-
-```{r}
-bad <-x[!is.na(x)]
 ```
 
 Create a histogram now with total nmber of steps taken each day.
 
 ```{r}
-bad <-x[!is.na(x)]
+y <- c(totals$"data$steps")
+histogram2 <- hist(y)
+histogram2
 ```
 
 Calculate and report mean and median total number of steps taken per day.
 
 ```{r}
-bad <-x[!is.na(x)]
+mean <-mean(y)
+mean
+median <-median(y)
+median
 ```
 
-From this, we can tell that these values DIFFER/ARE SIMILAR to the estimates from the first part of the assignment. Imputing missing data impacts the estimates of the total number of steps by ...
+From this, we can tell that these values are very similar to the estimates from the first part of the assignment. Imputing missing data increases the estimates of the total number of steps's median.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-Using the dataset with this filled-in missing values, create a new factor variable with two levels-"weekday" and "weekend" indicating whether a given date is a weekday or weekend day using weekdays().
+Using the dataset with this filled-in missing values, create a new factor variable with two levels-"weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
 ```{r}
-bad <-x[!is.na(x)]
+Date1 <- as.POSIXlt(totals$date)
+df = data.frame(Date1) 
+df$day <- weekdays(as.Date(df$Date1))
+head(df)
 ```
 
-Make a panel plot containing a time series plot (type = "1") of 5 minute interval (x axis) and average number of steps taken, averaged across all weekdays days OR weekend days (y axis). (README in github will show you how this works)
+Make a panel plot containing a time series plot (type = "1") of 5 minute interval (x axis) and average number of steps taken, averaged across all weekdays days OR weekend days (y axis). 
